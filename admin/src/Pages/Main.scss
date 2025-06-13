@@ -1,0 +1,193 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+
+.home-container {
+  position: relative;
+  height: 83vh;
+  background-image: url("https://img.freepik.com/premium-photo/mail-boxes-shipping-packaging-background-wallpaper_446063-240.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  font-family: "Poppins", sans-serif;
+}
+
+.face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.34);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  color: #fff;
+}
+
+.count-text {
+  font-size: 1.8rem;
+}
+
+.icon-wrapper {
+  margin-bottom: 1.5rem;
+}
+
+.animated-icon {
+  font-size: 4rem;
+  color: #D10013;
+  animation: pulse 1.5s infinite;
+}
+
+/* Animasiya */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+/* Responsiv */
+@media (max-width: 600px) {
+  .count-text {
+    font-size: 1.4rem;
+  }
+
+  .animated-icon {
+    font-size: 3rem;
+  }
+}
+
+#loginPage {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f2f9f4; /* Təbii yaşıl və krem qarışığı */
+  form {
+    background: #ffffff; /* Ağ və açıq rəngli arxa plan */
+    padding: 40px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: "Poppins", sans-serif;
+    width: 500px;
+    @media (max-width: 768px) {
+      width: 300px;
+    }
+    h1 {
+      font-size: 32px;
+      font-family: "Poppins", sans-serif;
+
+      text-align: center;
+      color: #333; /* Başlıq üçün şərq boz */
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      label {
+        font-size: 18px;
+        font-weight: bold;
+        color: #4e4e4e;
+      }
+
+      input {
+        height: 50px;
+        padding: 15px;
+        border-radius: 10px;
+        border: 2px solid #ddd;
+        background: #f8f8f8;
+        font-family: "Poppins", sans-serif;
+
+        font-size: 16px;
+        color: #333;
+        outline: none;
+
+        &:focus {
+          border-color: #D10013;
+        }
+        @media (max-width: 768px) {
+          width: 100%;
+        }
+        &::placeholder {
+          color: #aaa; /* Göstərilməyən mətndə təbii rəng */
+        }
+      }
+
+      .input-wrapper {
+        display: flex;
+        align-items: center;
+        background: #f8f8f8;
+        border-radius: 10px;
+        padding: 0px 15px 0px 0px;
+        border: 2px solid #ddd;
+      
+        input {
+          flex: 1;
+          background: transparent;
+          border: none;
+          outline: none; /* Input-a fokus olunduqda outline-ı silirik */
+          padding: 10px; /* Düzgün görünüş üçün */
+        
+        }
+      
+       
+      
+        .eye-icon {
+          font-size: 22px;
+          color: #666;
+          cursor: pointer;
+          display: flex;
+        }
+      }
+      
+    }
+
+    button {
+      height: 50px;
+      background-color: #D10013;
+      color: white;
+      font-size: 16px;
+      font-family: "Poppins", sans-serif;
+
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background-color: #ff5722;
+      }
+
+      img {
+        width: 40px;
+        height: auto;
+      }
+    }
+
+    @media (max-width: 757px) {
+      width: 90%;
+      padding: 30px 20px;
+
+      .form-group {
+        width: 100%;
+      }
+    }
+  }
+}
