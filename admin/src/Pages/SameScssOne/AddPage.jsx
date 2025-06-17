@@ -31,7 +31,7 @@ function AddPage() {
   // Fetch products to pre-fill the form if needed
   const fetchData = async () => {
     try {
-      const res = await axios.get("http://172.20.10.92:8000/api/packages/");
+      const res = await axios.get("http://192.168.30.33:8000/api/packages/");
       console.log("Products fetched:", res.data);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -136,7 +136,7 @@ function AddPage() {
     try {
       setLoading(true);
       const res = await axios.post(
-        "http://172.20.10.92:8000/api/packages/",
+        "http://192.168.30.33:8000/api/packages/",
         formData,
         {
           headers: {

@@ -1,136 +1,206 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./UpdatePage.scss";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function UpdatePage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+
+  const [formData, setFormData] = useState({
+    MainCategory: "",
+    Type: { Az: "", Tr: "", En: "" },
+    Desc: { Az: "", Tr: "", En: "" },
+    Name: { Az: "", Tr: "", En: "" },
+    Spec1: { Az: "", Tr: "", En: "" },
+    Spec2: { Az: "", Tr: "", En: "" },
+    Spec3: { Az: "", Tr: "", En: "" },
+    Price: "",
+    Look: true,
+  });
+
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [load, setLoad] = useState(false);
+
+  useEffect(() => {
+    const fetchDetail = async () => {
+      try {
+        const res = await axios.get(
+          `http://192.168.30.33:8000/api/packages/${id}`
+        );
+        const data = res.data;
+
+        setFormData({
+          MainCategory: data.MainCategory,
+          Type: data.Type,
+          Desc: data.Desc,
+          Name: data.Name,
+          Spec1: data.Spec1,
+          Spec2: data.Spec2,
+          Spec3: data.Spec3,
+          Price: data.Price,
+          Look: data.Look,
+        });
+
+        // Assuming your API returns an image URL in data.image
+        setImagePreview(data.image);
+      } catch (err) {
+        console.error("Məlumat gətirilərkən xəta:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDetail();
+  }, [id]);
+
+  const handleInput = (group, lang, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [group]: {
+        ...prev[group],
+        [lang]: value,
+      },
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+    setLoad(true);
+
+      const payload = new FormData();
+      payload.append("MainCategory", formData.MainCategory);
+      payload.append("Type", JSON.stringify(formData.Type));
+      payload.append("Desc", JSON.stringify(formData.Desc));
+      payload.append("Name", JSON.stringify(formData.Name));
+      payload.append("Spec1", JSON.stringify(formData.Spec1));
+      payload.append("Spec2", JSON.stringify(formData.Spec2));
+      payload.append("Spec3", JSON.stringify(formData.Spec3));
+      payload.append("Price", formData.Price);
+      payload.append("Look", formData.Look);
+
+      if (imageFile) {
+        payload.append("Image", imageFile);
+      }
+
+      await axios.put(`http://192.168.30.33:8000/api/packages/${id}/`, payload);
+
+      // alert("Məlumat uğurla yeniləndi!");
+      setLoad(false);
+      navigate("/erzaq");
+    } catch (err) {
+      console.error("Yeniləmə zamanı xəta:", err);
+      alert("Yeniləmə zamanı xəta baş verdi.");
+    }
+  };
+
   return (
     <div className="update-page">
-      <h2 className="title">Ərzaq Yenilə</h2>
-      <form className="update-form">
-        {/* Kateqoriya seçimi */}
-        <div className="form-group">
-          <label htmlFor="category">Kateqoriya Seç</label>
-          <select id="category" name="category">
-            <option value="All">Hamısı</option>
-            <option value="Təmizlik">Təmizlik</option>
-            <option value="Paketləmə">Paketləmə</option>
-          </select>
-        </div>
+      <h2 className="title">Ərzağı Yenilə</h2>
 
-        {/* Növü */}
-        <div className="form-group">
-          <label htmlFor="typeAz">Növü (AZ)</label>
-          <input
-            type="text"
-            id="typeAz"
-            name="type.az"
-            placeholder="Növünü daxil edin"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="typeTr">Növü (TR)</label>
-          <input
-            type="text"
-            id="typeTr"
-            name="type.tr"
-            placeholder="Türünü girin"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="typeEn">Növü (EN)</label>
-          <input
-            type="text"
-            id="typeEn"
-            name="type.en"
-            placeholder="Enter type"
-          />
-        </div>
+      {loading ? (
+        <div className="loading">Yüklənir...</div>
+      ) : (
+        <form className="update-form" onSubmit={handleSubmit}>
+          {/* Kateqoriya */}
+          <div className="form-group">
+            <label>Kateqoriya</label>
+            <select
+              value={formData.MainCategory}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  MainCategory: e.target.value,
+                }))
+              }
+            >
+              <option value="cleaning">Təmizlik</option>
+              <option value="packaging">Paketləmə</option>
+            </select>
+          </div>
 
-        {/* Açıqlama */}
-        <div className="form-group">
-          <label htmlFor="descAz">Açıqlama (AZ)</label>
-          <textarea
-            id="descAz"
-            name="desc.az"
-            placeholder="Ərzaq barədə açıqlama yazın"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="descTr">Açıqlama (TR)</label>
-          <textarea id="descTr" name="desc.tr" placeholder="Açıklama girin" />
-        </div>
-        <div className="form-group">
-          <label htmlFor="descEn">Açıqlama (EN)</label>
-          <textarea
-            id="descEn"
-            name="desc.en"
-            placeholder="Enter description"
-          />
-        </div>
+          {/* Dinamik Dəyişənlər */}
+          {["Type", "Desc", "Name", "Spec1", "Spec2", "Spec3"].map((field) =>
+            ["Az", "Tr", "En"].map((lang) => (
+              <div className="form-group" key={`${field}-${lang}`}>
+                <label>{`${field} (${lang})`}</label>
+                {field === "Desc" ? (
+                  <textarea
+                    value={formData[field][lang]}
+                    onChange={(e) => handleInput(field, lang, e.target.value)}
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    value={formData[field][lang]}
+                    onChange={(e) => handleInput(field, lang, e.target.value)}
+                  />
+                )}
+              </div>
+            ))
+          )}
 
-        {/* Text1 */}
-        <div className="form-group">
-          <label>Text1 adı (AZ)</label>
-          <input type="text" name="text1.az" placeholder="Text1 (AZ)" />
-        </div>
-        <div className="form-group">
-          <label>Text1 adı (TR)</label>
-          <input type="text" name="text1.tr" placeholder="Text1 (TR)" />
-        </div>
-        <div className="form-group">
-          <label>Text1 adı (EN)</label>
-          <input type="text" name="text1.en" placeholder="Text1 (EN)" />
-        </div>
+          {/* Qiymət */}
+          <div className="form-group">
+            <label>Qiymət</label>
+            <input
+              type="text"
+              value={formData.Price}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  Price: e.target.value,
+                }))
+              }
+            />
+          </div>
 
-        {/* Text2 */}
-        <div className="form-group">
-          <label>Text2 adı (AZ)</label>
-          <input type="text" name="text2.az" placeholder="Text2 (AZ)" />
-        </div>
-        <div className="form-group">
-          <label>Text2 adı (TR)</label>
-          <input type="text" name="text2.tr" placeholder="Text2 (TR)" />
-        </div>
-        <div className="form-group">
-          <label>Text2 adı (EN)</label>
-          <input type="text" name="text2.en" placeholder="Text2 (EN)" />
-        </div>
+          {/* Görünmə */}
+          <div className="form-group">
+            <label>Görünməsi</label>
+            <select
+              value={formData.Look ? "true" : "false"}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  Look: e.target.value === "true",
+                }))
+              }
+            >
+              <option value="true">Görünsün</option>
+              <option value="false">Görünməsin</option>
+            </select>
+          </div>
 
-        {/* Text3 */}
-        <div className="form-group">
-          <label>Text3 adı (AZ)</label>
-          <input type="text" name="text3.az" placeholder="Text3 (AZ)" />
-        </div>
-        <div className="form-group">
-          <label>Text3 adı (TR)</label>
-          <input type="text" name="text3.tr" placeholder="Text3 (TR)" />
-        </div>
-        <div className="form-group">
-          <label>Text3 adı (EN)</label>
-          <input type="text" name="text3.en" placeholder="Text3 (EN)" />
-        </div>
+          {/* Şəkil */}
+          <div className="form-group">
+            <label>Şəkil Yüklə</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                setImageFile(file);
+                setImagePreview(URL.createObjectURL(file));
+              }}
+            />
+            {imagePreview && (
+              <img
+                src={imagePreview}
+                alt="Önizləmə"
+                className="image-preview"
+              />
+            )}
+          </div>
 
-        {/* Qiymət */}
-        <div className="form-group">
-          <label htmlFor="price">Qiymət</label>
-          <input
-            type="text"
-            id="price"
-            name="price"
-            placeholder="Məsələn: 5.90 AZN"
-          />
-        </div>
-
-        {/* Şəkil */}
-        <div className="form-group">
-          <label htmlFor="image">Şəkil</label>
-          <input type="file" id="image" name="image" accept="image/*" />
-          <img alt="Food Preview" className="image-preview" />
-        </div>
-
-        <button className="submit-btn" type="submit">
-          Yenilə
-        </button>
-      </form>
+          <button type="submit" className="submit-btn">
+            {load ? <div class="loader"></div> : "Yadda saxla"}
+          </button>
+        </form>
+      )}
     </div>
   );
 }
