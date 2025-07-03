@@ -86,7 +86,7 @@ function UpdatePage() {
     const fetchDetail = async () => {
       try {
         const res = await axios.get(
-          `http://172.20.10.89:8000/api/packages/${id}`
+          `http://172.20.10.78:8000/api/packages/${id}`
         );
         const data = res.data;
 
