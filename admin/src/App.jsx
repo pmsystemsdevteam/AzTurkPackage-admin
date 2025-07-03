@@ -9,6 +9,7 @@ import AddPage from "./Pages/SameScssOne/AddPage";
 import UpdatePage from "./Pages/SameScssOne/UpdatePage";
 import FoodPage from "./Pages/SameScssTwo/FoodPage";
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -21,6 +22,7 @@ function App() {
         <Route path="/erzaq" element={<FoodPage />} />
         <Route path="/erzaq/edit/:id" element={<UpdatePage />} />
         <Route path="/erzaq/add" element={<AddPage />} />
+    
 
       </Routes>
       <Footer />
