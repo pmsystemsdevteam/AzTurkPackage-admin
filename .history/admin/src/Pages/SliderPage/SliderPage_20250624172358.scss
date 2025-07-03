@@ -1,0 +1,438 @@
+.sliderContainer {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 100vh;
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 10px;
+  }
+
+  .categorySelector {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    
+    select {
+      padding: 15px 25px;
+      font-size: 18px;
+      font-weight: 600;
+      border: 3px solid #d10011;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      color: #d10011;
+      cursor: pointer;
+      outline: none;
+      box-shadow: 0 8px 25px rgba(209, 0, 17, 0.15);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      min-width: 200px;
+      text-align: center;
+      
+      &:hover {
+        background: linear-gradient(135deg, #d10011 0%, #a8000e 100%);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(209, 0, 17, 0.25);
+      }
+      
+      &:focus {
+        background: linear-gradient(135deg, #d10011 0%, #a8000e 100%);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(209, 0, 17, 0.25);
+      }
+      
+      option {
+        background: white;
+        color: #d10011;
+        padding: 10px;
+      }
+      
+      @media (max-width: 768px) {
+        padding: 12px 20px;
+        font-size: 16px;
+        min-width: 180px;
+      }
+      
+      @media (max-width: 480px) {
+        padding: 10px 15px;
+        font-size: 14px;
+        min-width: 160px;
+      }
+    }
+  }
+
+  .sliderGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    
+    @media (max-width: 1200px) {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+    
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .sliderCard {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(209, 0, 17, 0.1);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      aspect-ratio: 16/9;
+      
+      &:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(209, 0, 17, 0.2);
+        
+        .cardActions {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+
+      .cardActions {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        display: flex;
+        gap: 10px;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        
+        button {
+          width: 45px;
+          height: 45px;
+          border: none;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-size: 16px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          backdrop-filter: blur(10px);
+          
+          &:first-child {
+            background: rgba(255, 255, 255, 0.9);
+            color: #d10011;
+            
+            &:hover {
+              background: #d10011;
+              color: white;
+              transform: scale(1.1);
+            }
+          }
+          
+          &:last-child {
+            background: rgba(209, 0, 17, 0.9);
+            color: white;
+            
+            &:hover {
+              background: #a8000e;
+              transform: scale(1.1);
+            }
+          }
+          
+          @media (max-width: 768px) {
+            width: 40px;
+            height: 40px;
+            font-size: 14px;
+          }
+        }
+        
+        @media (max-width: 768px) {
+          top: 10px;
+          right: 10px;
+          gap: 8px;
+        }
+      }
+
+      .emptyCard {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 3px dashed #d10011;
+        
+        button {
+          padding: 20px 30px;
+          background: linear-gradient(135deg, #d10011 0%, #a8000e 100%);
+          color: white;
+          border: none;
+          border-radius: 50px;
+          font-size: 18px;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 8px 25px rgba(209, 0, 17, 0.3);
+          
+          &:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(209, 0, 17, 0.4);
+          }
+          
+          &:active {
+            transform: translateY(-1px) scale(1.02);
+          }
+          
+          @media (max-width: 768px) {
+            padding: 15px 25px;
+            font-size: 16px;
+          }
+          
+          @media (max-width: 480px) {
+            padding: 12px 20px;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modalContent {
+      background: white;
+      border-radius: 25px;
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8) translateY(50px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+
+      .modalClose {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        background: rgba(209, 0, 17, 0.9);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1001;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        
+        &:hover {
+          background: #a8000e;
+          transform: scale(1.1);
+        }
+        
+        @media (max-width: 768px) {
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+          top: 15px;
+          right: 15px;
+        }
+      }
+
+      .modalImageContainer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        img {
+          max-width: 80vw;
+          max-height: 80vh;
+          object-fit: contain;
+          border-radius: 15px;
+          
+          @media (max-width: 768px) {
+            max-width: 85vw;
+            max-height: 70vh;
+          }
+        }
+      }
+
+      .modalAddContainer {
+        padding: 40px;
+        text-align: center;
+        min-width: 400px;
+        
+        @media (max-width: 768px) {
+          padding: 30px;
+          min-width: 300px;
+        }
+        
+        @media (max-width: 480px) {
+          padding: 20px;
+          min-width: 250px;
+        }
+
+        h3 {
+          color: #d10011;
+          font-size: 24px;
+          font-weight: 700;
+          margin-bottom: 25px;
+          
+          @media (max-width: 768px) {
+            font-size: 20px;
+            margin-bottom: 20px;
+          }
+        }
+
+        input[type="file"] {
+          width: 100%;
+          padding: 15px;
+          border: 3px dashed #d10011;
+          border-radius: 15px;
+          background: #f8f9fa;
+          margin-bottom: 25px;
+          cursor: pointer;
+          font-size: 16px;
+          transition: all 0.3s ease;
+          
+          &:hover {
+            background: #e9ecef;
+            border-color: #a8000e;
+          }
+          
+          @media (max-width: 768px) {
+            padding: 12px;
+            font-size: 14px;
+            margin-bottom: 20px;
+          }
+        }
+
+        .modalActions {
+          display: flex;
+          gap: 15px;
+          justify-content: center;
+
+          button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 120px;
+            
+            &:first-child {
+              background: linear-gradient(135deg, #d10011 0%, #a8000e 100%);
+              color: white;
+              box-shadow: 0 8px 25px rgba(209, 0, 17, 0.3);
+              
+              &:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 35px rgba(209, 0, 17, 0.4);
+              }
+              
+              &:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+              }
+            }
+            
+            &:last-child {
+              background: #6c757d;
+              color: white;
+              box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+              
+              &:hover {
+                background: #5a6268;
+                transform: translateY(-2px);
+                box-shadow: 0 12px 35px rgba(108, 117, 125, 0.4);
+              }
+            }
+            
+            @media (max-width: 768px) {
+              padding: 12px 25px;
+              font-size: 14px;
+              min-width: 100px;
+            }
+            
+            @media (max-width: 480px) {
+              padding: 10px 20px;
+              font-size: 13px;
+              min-width: 80px;
+            }
+          }
+          
+          @media (max-width: 480px) {
+            gap: 10px;
+          }
+        }
+      }
+    }
+  }
+}
