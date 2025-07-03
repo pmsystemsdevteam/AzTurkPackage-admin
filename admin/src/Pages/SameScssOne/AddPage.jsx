@@ -381,6 +381,7 @@ function AddPage() {
           />
         </div>
         <div className="form-group">
+          
           <label>
             Xüsusiyyət 1(TR)
             <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
