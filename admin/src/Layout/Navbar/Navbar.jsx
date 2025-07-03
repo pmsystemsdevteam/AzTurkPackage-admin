@@ -16,7 +16,8 @@ const Navbar = () => {
       </div>
       <div className={`nav-links ${isOpen ? "open" : ""}`}>
         <Link to="/" onClick={toggleMenu}>Ana Səhifə</Link>
-        <Link to="/erzaq" onClick={toggleMenu}>Ərzaqlar</Link>
+        <Link to="/erzaq" onClick={toggleMenu}>Məhsullar</Link>
+   
         <Link to="/cixis" onClick={toggleMenu}>Çıxış</Link>
       </div>
       <div className="hamburger" onClick={toggleMenu}>
