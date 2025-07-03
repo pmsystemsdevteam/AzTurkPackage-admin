@@ -17,12 +17,12 @@ function FoodPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://192.168.30.33:8000/api/packages/");
+        const res = await axios.get("http://172.20.10.78:8000/api/packages/");
         setProduct(res.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
-    };
+    };  
 
     fetchData();
   }, []);
@@ -31,7 +31,7 @@ function FoodPage() {
   const handleDelete = async () => {
     try {
       await axios.delete(
-        `http://192.168.30.33:8000/api/packages/${deleteId}/`
+        `http://172.20.10.78:8000/api/packages/${deleteId}/`
       );
       setProduct((prev) => prev.filter((food) => food.id !== deleteId));
       setDeleteId(null);

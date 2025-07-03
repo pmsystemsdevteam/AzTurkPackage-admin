@@ -28,7 +28,7 @@ function UpdatePage() {
     const fetchDetail = async () => {
       try {
         const res = await axios.get(
-          `http://192.168.30.33:8000/api/packages/${id}`
+          `http://172.20.10.78:8000/api/packages/${id}`
         );
         const data = res.data;
 
@@ -86,7 +86,7 @@ function UpdatePage() {
         payload.append("Image", imageFile);
       }
 
-      await axios.put(`http://192.168.30.33:8000/api/packages/${id}/`, payload);
+      await axios.put(`http://172.20.10.78:8000/api/packages/${id}/`, payload);
 
       // alert("Məlumat uğurla yeniləndi!");
       setLoad(false);

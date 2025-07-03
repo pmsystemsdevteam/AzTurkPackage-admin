@@ -1,9 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Main.scss";
 import { AiOutlineClear } from "react-icons/ai";
+import axios from "axios";
 function HomePage() {
-  const foodCount = 25; // bu dinamik ola bilər
-  const categoryCount = 7;
+  const [product, setProduct] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("http://172.20.10.78:8000/api/packages/");
+        setProduct(res.data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const cleaningCount = product.filter(
+    (item) => item?.MainCategory === "cleaning"
+  ).length;
+  const packagingCount = product.filter(
+    (item) => item?.MainCategory === "packaging"
+  ).length;
 
   return (
     <div className="home-container">
@@ -11,8 +31,8 @@ function HomePage() {
         <div className="icon-wrapper">
           <AiOutlineClear className="animated-icon" />
         </div>
-        <h1 className="count-text">Təmizlik məhsulu sayı: {foodCount}</h1>
-        <h2 className="count-text">Paketləmə məhsulu sayı: {categoryCount}</h2>
+        <h1 className="count-text">Təmizlik məhsulu sayı: {cleaningCount}</h1>
+        <h2 className="count-text">Paketləmə məhsulu sayı: {packagingCount}</h2>
       </div>
     </div>
   );
