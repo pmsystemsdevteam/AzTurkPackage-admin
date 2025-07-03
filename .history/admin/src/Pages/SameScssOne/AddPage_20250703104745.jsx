@@ -379,8 +379,9 @@ function AddPage() {
             value={spec1Az}
             onChange={(e) => setSpec1Az(e.target.value)}
           />
-        </div>
+        </div>\
         <div className="form-group">
+
           <label>
             Xüsusiyyət 1(TR)
             <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>

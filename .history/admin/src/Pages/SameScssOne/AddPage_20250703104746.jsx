@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify"; // Import react-toastify
-import "react-toastify/dist/ReactToastify.css"; // Import react-toastify CSS
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Switch from "react-switch";
 import "./UpdatePage.scss";
+import { IoIosInformationCircleOutline, IoIosCloseCircleOutline } from "react-icons/io";
+import categoryOfProduct from "../../../public/assets/category.jpg";
+import productOfInfo from "../../../public/assets/productOfInfo.png";
 
 function AddPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -30,12 +34,22 @@ function AddPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [look, setLook] = useState(true);
   const [visible, setVisible] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalImage, setModalImage] = useState("");
+  const [types, setTypes] = useState([]);
+  const [filteredTypes, setFilteredTypes] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  // Fetch products to pre-fill the form if needed
   const fetchData = async () => {
     try {
-      const res = await axios.get("http://172.20.10.86:8000/api/packages/");
+      const res = await axios.get("http://172.20.10.89:8000/api/packages/");
       console.log("Products fetched:", res.data);
+      // Extract unique types from the fetched data
+      const uniqueTypes = res.data.map(item => item.Type).filter((value, index, self) => 
+        index === self.findIndex((t) => t.Az === value.Az)
+      );
+      setTypes(uniqueTypes);
+      setFilteredTypes(uniqueTypes);
     } catch (error) {
       console.error("Error fetching products:", error);
       toast.error("Məhsulları əldə etmək alınmadı!", {
@@ -48,6 +62,29 @@ function AddPage() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const handleTypeInputChange = (e, language) => {
+    const value = e.target.value;
+    if (language === 'Az') setTypeAz(value);
+    if (language === 'Tr') setTypeTr(value);
+    if (language === 'En') setTypeEn(value);
+
+    // Filter types based on input
+    const filtered = types.filter(type => 
+      type.Az.toLowerCase().includes(value.toLowerCase()) ||
+      type.Tr.toLowerCase().includes(value.toLowerCase()) ||
+      type.En.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredTypes(filtered);
+    setShowDropdown(value.length > 0);
+  };
+
+  const handleTypeSelect = (type) => {
+    setTypeAz(type.Az);
+    setTypeTr(type.Tr);
+    setTypeEn(type.En);
+    setShowDropdown(false);
+  };
 
   const resetForm = () => {
     setSelectedCategory("All");
@@ -74,9 +111,9 @@ function AddPage() {
     setLook(true);
     setVisible(true);
     setErrorMessage("");
+    setShowDropdown(false);
   };
 
-  // Handle the form submit
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (
@@ -112,8 +149,6 @@ function AddPage() {
 
     setErrorMessage("");
     const formData = new FormData();
-
-    // Flattening the data for each language field
     formData.append("MainCategory", selectedCategory);
     const typeObj = { Az: typeAz, En: typeEn, Tr: typeTr };
     formData.append("Type", JSON.stringify(typeObj));
@@ -135,7 +170,7 @@ function AddPage() {
     try {
       setLoading(true);
       const res = await axios.post(
-        "http://172.20.10.86:8000/api/packages/",
+        "http://172.20.10.89:8000/api/packages/",
         formData,
         {
           headers: {
@@ -149,6 +184,7 @@ function AddPage() {
         position: "top-right",
         autoClose: 3000,
       });
+      fetchData(); // Refresh types after successful submission
     } catch (error) {
       console.error("Error adding product:", error);
       setLoading(false);
@@ -160,61 +196,142 @@ function AddPage() {
     }
   };
 
+  const openImageModal = (image) => {
+    setModalImage(image);
+    setModalOpen(true);
+  };
+
+  const closeImageModal = () => {
+    setModalOpen(false);
+    setModalImage("");
+  };
+
   return (
     <div className="update-page">
       <h2 className="title">Ərzaq Əlavə et</h2>
       <form className="update-form" onSubmit={handleFormSubmit}>
-        {/* Kateqoriya Seçimi */}
         <div className="form-group">
-          <label htmlFor="category">Kateqoriya Seç</label>
+          <label htmlFor="category">
+            Kateqoriya Seç
+            <span className="info-icon" onClick={() => openImageModal(categoryOfProduct)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <select
             id="category"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
-            <option value="All" disabled>
-              Hamısı
-            </option>
+            <option value="All" disabled>Hamısı</option>
             <option value="cleaning">Təmizlik</option>
             <option value="packaging">Paketləmə</option>
           </select>
         </div>
-
-        {/* Növü */}
         <div className="form-group">
-          <label htmlFor="typeAz">Növü (AZ)</label>
+          <label htmlFor="typeAz">
+            Növü (AZ)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <input
             type="text"
             id="typeAz"
             value={typeAz}
-            onChange={(e) => setTypeAz(e.target.value)}
+            onChange={(e) => handleTypeInputChange(e, 'Az')}
             placeholder="Növünü daxil edin"
+            autoComplete="off"
           />
+          {showDropdown && filteredTypes.length > 0 && (
+            <div className="type-dropdown">
+              <ul>
+                {filteredTypes.map((type, index) => (
+                  <li key={index} onClick={() => handleTypeSelect(type)}>
+                    {type.Az}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
         <div className="form-group">
-          <label htmlFor="typeTr">Növü (TR)</label>
+          <label htmlFor="typeTr">
+            Növü (TR)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <input
             type="text"
             id="typeTr"
             value={typeTr}
-            onChange={(e) => setTypeTr(e.target.value)}
+            onChange={(e) => handleTypeInputChange(e, 'Tr')}
             placeholder="Türünü girin"
+             autoComplete="off"
           />
         </div>
         <div className="form-group">
-          <label htmlFor="typeEn">Növü (EN)</label>
+          <label htmlFor="typeEn">
+            Növü (EN)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <input
             type="text"
             id="typeEn"
             value={typeEn}
-            onChange={(e) => setTypeEn(e.target.value)}
+            onChange={(e) => handleTypeInputChange(e, 'En')}
             placeholder="Enter type"
+             autoComplete="off"
           />
         </div>
-
-        {/* Açıqlama */}
         <div className="form-group">
-          <label htmlFor="descAz">Açıqlama (AZ)</label>
+          <label>
+            Adı (AZ)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
+          <input
+            type="text"
+            value={nameAz}
+            onChange={(e) => setNameAz(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label>
+            Adı (TR)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
+          <input
+            type="text"
+            value={nameTr}
+            onChange={(e) => setNameTr(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label>
+            Adı (EN)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
+          <input
+            type="text"
+            value={nameEn}
+            onChange={(e) => setNameEn(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="descAz">
+            Açıqlama (AZ)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <textarea
             id="descAz"
             value={descAz}
@@ -223,7 +340,12 @@ function AddPage() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="descTr">Açıqlama (TR)</label>
+          <label htmlFor="descTr">
+            Açıqlama (TR)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <textarea
             id="descTr"
             value={descTr}
@@ -232,7 +354,12 @@ function AddPage() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="descEn">Açıqlama (EN)</label>
+          <label htmlFor="descEn">
+            Açıqlama (EN)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <textarea
             id="descEn"
             value={descEn}
@@ -240,61 +367,54 @@ function AddPage() {
             placeholder="Enter description"
           />
         </div>
-
-        {/* Name */}
         <div className="form-group">
-          <label>Name (AZ)</label>
-          <input
-            type="text"
-            value={nameAz}
-            onChange={(e) => setNameAz(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label>Name (TR)</label>
-          <input
-            type="text"
-            value={nameTr}
-            onChange={(e) => setNameTr(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label>Name (EN)</label>
-          <input
-            type="text"
-            value={nameEn}
-            onChange={(e) => setNameEn(e.target.value)}
-          />
-        </div>
-
-        {/* Spec1, Spec2, Spec3 */}
-        <div className="form-group">
-          <label>Spec1 (AZ)</label>
+          <label>
+            Xüsusiyyət 1(AZ)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <input
             type="text"
             value={spec1Az}
             onChange={(e) => setSpec1Az(e.target.value)}
           />
         </div>
+        
         <div className="form-group">
-          <label>Spec1 (TR)</label>
+
+          <label>
+            Xüsusiyyət 1(TR)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <input
             type="text"
-            value={spec1Tr DPI Response
+            value={spec1Tr}
             onChange={(e) => setSpec1Tr(e.target.value)}
           />
         </div>
         <div className="form-group">
-          <label>Spec1 (EN)</label>
+          <label>
+            Xüsusiyyət 1(EN)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <input
             type="text"
             value={spec1En}
             onChange={(e) => setSpec1En(e.target.value)}
           />
         </div>
-
         <div className="form-group">
-          <label>Spec2 (AZ)</label>
+          <label>
+            Xüsusiyyət 2(AZ)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <input
             type="text"
             value={spec2Az}
@@ -302,7 +422,12 @@ function AddPage() {
           />
         </div>
         <div className="form-group">
-          <label>Spec2 (TR)</label>
+          <label>
+            Xüsusiyyət 2(TR)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <input
             type="text"
             value={spec2Tr}
@@ -310,16 +435,25 @@ function AddPage() {
           />
         </div>
         <div className="form-group">
-          <label>Spec2 (EN)</label>
+          <label>
+            Xüsusiyyət 2(EN)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <input
             type="text"
             value={spec2En}
- onChange={(e) => setSpec2En(e.target.value)}
+            onChange={(e) => setSpec2En(e.target.value)}
           />
         </div>
-
         <div className="form-group">
-          <label>Spec3 (AZ)</label>
+          <label>
+            Xüsusiyyət 3(AZ)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <input
             type="text"
             value={spec3Az}
@@ -327,7 +461,12 @@ function AddPage() {
           />
         </div>
         <div className="form-group">
-          <label>Spec3 (TR)</label>
+          <label>
+            Xüsusiyyət 3(TR)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <input
             type="text"
             value={spec3Tr}
@@ -335,14 +474,18 @@ function AddPage() {
           />
         </div>
         <div className="form-group">
-          <label>Spec3 (EN)</label>
+          <label>
+            Xüsusiyyət 3(EN)
+            <span className="info-icon" onClick={() => openImageModal(productOfInfo)}>
+              <i><IoIosInformationCircleOutline /></i>
+            </span>
+          </label>
           <input
             type="text"
             value={spec3En}
             onChange={(e) => setSpec3En(e.target.value)}
           />
         </div>
-
         <div className="form-group">
           <label htmlFor="price">Qiymət</label>
           <input
@@ -353,7 +496,6 @@ function AddPage() {
             placeholder="Məsələn: 5.90 AZN"
           />
         </div>
-
         <div className="form-group">
           <label htmlFor="image">Şəkil</label>
           <input
@@ -370,38 +512,53 @@ function AddPage() {
             />
           )}
         </div>
-
-        {/* Price Visibility (Look) */}
-        <div className="form-group">
+        <div className="form-group toggle-group">
           <label htmlFor="look">Qiymət Görünməsi</label>
-          <input
-            type="checkbox"
-            id="look"
+          <Switch
+            onChange={(checked) => setLook(checked)}
             checked={look}
-            onChange={(e) => setLook(e.target.checked)}
+            onColor="#d10013"
+            offColor="#ccc"
+            handleDiameter={20}
+            height={24}
+            width={48}
+            uncheckedIcon={false}
+            checkedIcon={false}
+            id="look"
           />
-          <span>{look ? "Görünən" : "Görünməyən"}</span>
+          <span className="toggle-label">{look ? "Görünən" : "Görünməyən"}</span>
         </div>
-
-        {/* Product Visibility (Visible) */}
-        <div className="form-group">
+        <div className="form-group toggle-group">
           <label htmlFor="visible">Məhsul Görünməsi</label>
-          <input
-            type="checkbox"
-            id="visible"
+          <Switch
+            onChange={(checked) => setVisible(checked)}
             checked={visible}
-            onChange={(e) => setVisible(e.target.checked)}
+            onColor="#d10013"
+            offColor="#ccc"
+            handleDiameter={20}
+            height={24}
+            width={48}
+            uncheckedIcon={false}
+            checkedIcon={false}
+            id="visible"
           />
-          <span>{visible ? "Görünən" : "Görünməyən"}</span>
+          <span className="toggle-label">{visible ? "Görünən" : "Görünməyən"}</span>
         </div>
-
         {errorMessage && <p className="error">{errorMessage}</p>}
         <button className="submit-btn" type="submit">
           {loading ? <div className="loader"></div> : "Daxil et"}
         </button>
       </form>
-
-      {/* Add ToastContainer to display notifications */}
+      {modalOpen && (
+        <div className="image-modal">
+          <div className="modal-content">
+            <span className="close-modal" onClick={closeImageModal}>
+              <IoIosCloseCircleOutline />
+            </span>
+            <img src={modalImage} alt="Info" />
+          </div>
+        </div>
+      )}
       <ToastContainer />
     </div>
   );
