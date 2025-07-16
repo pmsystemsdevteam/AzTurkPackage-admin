@@ -39,10 +39,11 @@ function AddPage() {
   const [types, setTypes] = useState([]);
   const [filteredTypes, setFilteredTypes] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+const [sales, setSales] = useState(false); 
 
   const fetchData = async () => {
     try {
-      const res = await axios.get("http://172.20.10.89:8000/api/packages/");
+      const res = await axios.get("http://172.20.10.60:8000/api/packages/");
       console.log("Products fetched:", res.data);
       // Extract unique types from the fetched data
       const uniqueTypes = res.data.map(item => item.Type).filter((value, index, self) => 
@@ -54,7 +55,7 @@ function AddPage() {
       console.error("Error fetching products:", error);
       toast.error("Məhsulları əldə etmək alınmadı!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 300,
       });
     }
   };
@@ -165,12 +166,13 @@ function AddPage() {
     formData.append("Price", price);
     formData.append("Look", look);
     formData.append("Visible", visible);
+    formData.append("Sales", sales); 
     if (image) formData.append("Image", image);
 
     try {
       setLoading(true);
       const res = await axios.post(
-        "http://172.20.10.89:8000/api/packages/",
+        "http://172.20.10.60:8000/api/packages/",
         formData,
         {
           headers: {
@@ -544,6 +546,25 @@ function AddPage() {
           />
           <span className="toggle-label">{visible ? "Görünən" : "Görünməyən"}</span>
         </div>
+         <div className="form-group toggle-group">
+          <label htmlFor="sales" style={{ color: sales ? '#d10013' : 'inherit' }}>
+            Kompaniya
+          </label>
+          <Switch
+            onChange={(checked) => setSales(checked)}
+            checked={sales}
+            onColor="#d10013"
+            offColor="#ccc"
+            handleDiameter={20}
+            height={24}
+            width={48}
+            uncheckedIcon={false}
+            checkedIcon={false}
+            id="sales"
+          />
+          <span className="toggle-label">{sales ? "Endirimdədir" : "Endirimdə deyil"}</span>
+        </div>
+
         {errorMessage && <p className="error">{errorMessage}</p>}
         <button className="submit-btn" type="submit">
           {loading ? <div className="loader"></div> : "Daxil et"}

@@ -37,7 +37,7 @@ function UpdatePage() {
 
   const fetchDetail = async () => {
     try {
-      const res = await axios.get(`http://172.20.10.89:8000/api/packages/${id}`);
+      const res = await axios.get(`http://172.20.10.60:8000/api/packages/${id}`);
       const data = res.data;
 
       setFormData({
@@ -67,7 +67,7 @@ function UpdatePage() {
 
   const fetchTypes = async () => {
     try {
-      const res = await axios.get("http://172.20.10.89:8000/api/packages/");
+      const res = await axios.get("http://172.20.10.60:8000/api/packages/");
       const uniqueTypes = res.data.map(item => item.Type).filter((value, index, self) => 
         index === self.findIndex((t) => t.Az === value.Az)
       );
@@ -189,7 +189,7 @@ function UpdatePage() {
         payload.append("Image", imageFile);
       }
 
-      await axios.put(`http://172.20.10.89:8000/api/packages/${id}/`, payload);
+      await axios.put(`http://172.20.10.60:8000/api/packages/${id}/`, payload);
 
       setLoad(false);
       toast.success("Məhsul uğurla yeniləndi!", {

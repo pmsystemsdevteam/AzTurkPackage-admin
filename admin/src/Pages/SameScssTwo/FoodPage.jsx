@@ -27,7 +27,7 @@ function FoodPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://172.20.10.89:8000/api/packages/");
+        const res = await axios.get("http://172.20.10.60:8000/api/packages/");
         setProduct(res.data);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -38,7 +38,7 @@ function FoodPage() {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://172.20.10.89:8000/api/packages/${deleteId}/`);
+      await axios.delete(`http://172.20.10.60:8000/api/packages/${deleteId}/`);
       setProduct((prev) => prev.filter((food) => food.id !== deleteId));
       setDeleteId(null);
     } catch (error) {
@@ -423,7 +423,13 @@ function FoodPage() {
         <tbody>
           {currentFoods.map((item, index) => (
             <tr key={item.id} className={item.Visible ? "" : "not-visible-row"}>
-              <td>{startIndex + index + 1}</td>
+              <td>
+                {item.Sales ? (
+                  <div className="sales">Kompanya</div>
+                ) : (
+                  startIndex + index + 1
+                )}
+              </td>
               <td>
                 {item.MainCategory === "cleaning" ? "Təmizlik" : "Paketləmə"}
               </td>

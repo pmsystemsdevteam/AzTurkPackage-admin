@@ -29,6 +29,7 @@ function UpdatePage() {
     Price: "",
     Look: true,
     Visible: true,
+    Sales: false, // New Sales field added
   });
 
   const [imageFile, setImageFile] = useState(null);
@@ -37,7 +38,7 @@ function UpdatePage() {
 
   const fetchDetail = async () => {
     try {
-      const res = await axios.get(`http://172.20.10.89:8000/api/packages/${id}`);
+      const res = await axios.get(`http://172.20.10.60:8000/api/packages/${id}`);
       const data = res.data;
 
       setFormData({
@@ -51,6 +52,7 @@ function UpdatePage() {
         Price: data.Price,
         Look: data.Look,
         Visible: data.Visible,
+        Sales: data.Sales, // Include Sales in fetched data
       });
 
       setImagePreview(data.image);
@@ -67,7 +69,7 @@ function UpdatePage() {
 
   const fetchTypes = async () => {
     try {
-      const res = await axios.get("http://172.20.10.89:8000/api/packages/");
+      const res = await axios.get("http://172.20.10.60:8000/api/packages/");
       const uniqueTypes = res.data.map(item => item.Type).filter((value, index, self) => 
         index === self.findIndex((t) => t.Az === value.Az)
       );
@@ -83,34 +85,6 @@ function UpdatePage() {
   };
 
   useEffect(() => {
-    const fetchDetail = async () => {
-      try {
-        const res = await axios.get(
-          `http://172.20.10.89:8000/api/packages/${id}`
-        );
-        const data = res.data;
-
-        setFormData({
-          MainCategory: data.MainCategory,
-          Type: data.Type,
-          Desc: data.Desc,
-          Name: data.Name,
-          Spec1: data.Spec1,
-          Spec2: data.Spec2,
-          Spec3: data.Spec3,
-          Price: data.Price,
-          Look: data.Look,
-        });
-
-        // Assuming your API returns an image URL in data.image
-        setImagePreview(data.image);
-      } catch (err) {
-        console.error("Məlumat gətirilərkən xəta:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchDetail();
     fetchTypes();
   }, [id]);
@@ -184,19 +158,20 @@ function UpdatePage() {
       payload.append("Price", formData.Price);
       payload.append("Look", formData.Look);
       payload.append("Visible", formData.Visible);
+      payload.append("Sales", formData.Sales); // Include Sales in payload
 
       if (imageFile) {
         payload.append("Image", imageFile);
       }
 
-      await axios.put(`http://172.20.10.89:8000/api/packages/${id}/`, payload);
+      await axios.put(`http://172.20.10.60:8000/api/packages/${id}/`, payload);
 
       setLoad(false);
       toast.success("Məhsul uğurla yeniləndi!", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 300,
       });
-      setTimeout(() => navigate("/erzaq"), 3000);
+      setTimeout(() => navigate("/erzaq"), 300);
     } catch (err) {
       console.error("Yeniləmə zamanı xəta:", err);
       setLoad(false);
@@ -553,6 +528,22 @@ function UpdatePage() {
           </div>
 
           <div className="form-group">
+            <label>Kompaniya</label>
+            <select
+              value={formData.Sales ? "true" : "false"}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  Sales: e.target.value === "true",
+                }))
+              }
+            >
+              <option value="true">Endirimdədir</option>
+              <option value="false">Endirimdə deyil</option>
+            </select>
+          </div>
+
+          <div className="form-group">
             <label>Şəkil Yüklə</label>
             <input
               type="file"
@@ -566,7 +557,7 @@ function UpdatePage() {
             {imagePreview && (
               <img
                 src={imagePreview}
-                alt="Önizlə886mə"
+                alt="Önizləmə"
                 className="image-preview"
               />
             )}
