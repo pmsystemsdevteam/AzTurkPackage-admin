@@ -30,7 +30,10 @@ function LoginPage() {
       const response = await axios.post("http://172.20.10.175:8000/api/auth/token/", {
         username: formData.username,
         password: formData.password,
+        
       }); 
+
+      
 
       // Assuming the response contains access and refresh tokens
       localStorage.setItem("access_token", response.data.access);
