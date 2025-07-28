@@ -27,11 +27,7 @@ function FoodPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-<<<<<<< HEAD
-        const res = await axios.get("http://192.168.30.166:8000/api/packages/");
-=======
-        const res = await axios.get("http://172.20.10.175:8000/api/packages/");
->>>>>>> 7dfdb0b6127a4f65918af9d96461d9a427ecc6e6
+        const res = await axios.get("http://172.20.10.60:8000/api/packages/");
         setProduct(res.data);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -42,11 +38,7 @@ function FoodPage() {
 
   const handleDelete = async () => {
     try {
-<<<<<<< HEAD
-      await axios.delete(`http://192.168.30.166:8000/api/packages/${deleteId}/`);
-=======
-      await axios.delete(`http://172.20.10.175:8000/api/packages/${deleteId}/`);
->>>>>>> 7dfdb0b6127a4f65918af9d96461d9a427ecc6e6
+      await axios.delete(`http://172.20.10.60:8000/api/packages/${deleteId}/`);
       setProduct((prev) => prev.filter((food) => food.id !== deleteId));
       setDeleteId(null);
     } catch (error) {
@@ -131,7 +123,7 @@ function FoodPage() {
 
   const downloadExcel = () => {
     const data = filteredFoods.map((item, index) => ({
-      "#": item.Sales ? "Kompanya" : startIndex + index + 1,
+      "#": startIndex + index + 1,
       Kateqoriya: item.MainCategory === "cleaning" ? "Təmizlik" : "Paketləmə",
       "Adı (AZ)": item.Name?.Az || "",
       "Adı (TR)": item.Name?.Tr || "",
@@ -152,6 +144,8 @@ function FoodPage() {
       "Xüsusiyyət 3 (TR)": item.Spec3?.Tr || "",
       "Xüsusiyyət 3 (EN)": item.Spec3?.En || "",
       Qiymət: `${item.Price} ₼` || "",
+      "Qiymət Görünməsi": item.Look ? "Görünən" : "Görünməyən",
+      "Məhsul Görünməsi": item.Visible ? "Görünən" : "Görünməyən",
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(data);
@@ -420,6 +414,8 @@ function FoodPage() {
             </th>
             <th>Şəkil</th>
             <th>Qiymət</th>
+            <th>Qiymət Görünməsi</th>
+            <th>Məhsul Görünməsi</th>
             <th>Yenilə</th>
             <th>Sil</th>
           </tr>
@@ -459,6 +455,8 @@ function FoodPage() {
                 <img src={item.image_url} alt={item.Type?.Az} />
               </td>
               <td>{item.Price} ₼</td>
+              <td>{item.Look ? "Görünən" : "Görünməyən"}</td>
+              <td>{item.Visible ? "Görünən" : "Görünməyən"}</td>
               <td>
                 <button className="edit" onClick={() => handleEdit(item.id)}>
                   Yenilə

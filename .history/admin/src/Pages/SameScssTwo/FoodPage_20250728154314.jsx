@@ -27,11 +27,7 @@ function FoodPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-<<<<<<< HEAD
-        const res = await axios.get("http://192.168.30.166:8000/api/packages/");
-=======
-        const res = await axios.get("http://172.20.10.175:8000/api/packages/");
->>>>>>> 7dfdb0b6127a4f65918af9d96461d9a427ecc6e6
+        const res = await axios.get("http://172.20.10.60:8000/api/packages/");
         setProduct(res.data);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -42,11 +38,7 @@ function FoodPage() {
 
   const handleDelete = async () => {
     try {
-<<<<<<< HEAD
-      await axios.delete(`http://192.168.30.166:8000/api/packages/${deleteId}/`);
-=======
-      await axios.delete(`http://172.20.10.175:8000/api/packages/${deleteId}/`);
->>>>>>> 7dfdb0b6127a4f65918af9d96461d9a427ecc6e6
+      await axios.delete(`http://172.20.10.60:8000/api/packages/${deleteId}/`);
       setProduct((prev) => prev.filter((food) => food.id !== deleteId));
       setDeleteId(null);
     } catch (error) {
