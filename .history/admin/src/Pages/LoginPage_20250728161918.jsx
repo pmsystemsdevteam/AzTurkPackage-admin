@@ -32,11 +32,8 @@ function LoginPage() {
         password: formData.password,
       });
 
-      // Assuming the response contains access and refresh tokens
       localStorage.setItem("access_token", response.data.access);
       localStorage.setItem("refresh_token", response.data.refresh);
-
-      // Redirect to a protected route (e.g., dashboard)
       navigate("/dashboard");
     } catch (err) {
       setError(
@@ -50,7 +47,7 @@ function LoginPage() {
   return (
     <section id="loginPage">
       <form onSubmit={handleSubmit}>
-        <h1>AZTURK PACKAGE Login</h1>
+        <h1>Macara Login</h1>
         {error && <p className="error">{error}</p>}
         <div className="form-group">
           <label>Username</label>

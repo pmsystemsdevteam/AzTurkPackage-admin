@@ -8,7 +8,11 @@ function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://192.168.30.73:8000/api/packages/");
+<<<<<<< HEAD
+        const res = await axios.get("http://192.168.30.166:8000/api/packages/");
+=======
+        const res = await axios.get("http://172.20.10.175:8000/api/packages/");
+>>>>>>> 7dfdb0b6127a4f65918af9d96461d9a427ecc6e6
         setProduct(res.data);
       } catch (error) {
         console.error("Error fetching products:", error);

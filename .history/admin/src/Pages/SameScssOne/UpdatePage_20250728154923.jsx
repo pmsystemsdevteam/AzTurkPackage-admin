@@ -38,7 +38,11 @@ function UpdatePage() {
 
   const fetchDetail = async () => {
     try {
-      const res = await axios.get(`http://192.168.30.73:8000/api/packages/${id}`);
+<<<<<<< HEAD
+      const res = await axios.get(`http://192.168.30.166:8000/api/packages/${id}`);
+=======
+      const res = await axios.get(`http://172.20.10.175:8000/api/packages/${id}`);
+>>>>>>> 7dfdb0b6127a4f65918af9d96461d9a427ecc6e6
       const data = res.data;
 
       setFormData({
@@ -69,7 +73,11 @@ function UpdatePage() {
 
   const fetchTypes = async () => {
     try {
-      const res = await axios.get("http://192.168.30.73:8000/api/packages/");
+<<<<<<< HEAD
+      const res = await axios.get("http://192.168.30.166:8000/api/packages/");
+=======
+      const res = await axios.get("http://172.20.10.175:8000/api/packages/");
+>>>>>>> 7dfdb0b6127a4f65918af9d96461d9a427ecc6e6
       const uniqueTypes = res.data.map(item => item.Type).filter((value, index, self) => 
         index === self.findIndex((t) => t.Az === value.Az)
       );
@@ -164,7 +172,11 @@ function UpdatePage() {
         payload.append("Image", imageFile);
       }
 
-      await axios.put(`http://192.168.30.73:8000/api/packages/${id}/`, payload);
+<<<<<<< HEAD
+      await axios.put(`http://192.168.30.166:8000/api/packages/${id}/`, payload);
+=======
+      await axios.put(`http://172.20.10.175:8000/api/packages/${id}/`, payload);
+>>>>>>> 7dfdb0b6127a4f65918af9d96461d9a427ecc6e6
 
       setLoad(false);
       toast.success("Məhsul uğurla yeniləndi!", {

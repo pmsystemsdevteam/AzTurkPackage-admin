@@ -27,10 +27,10 @@ function LoginPage() {
     setError("");
 
     try {
-      const response = await axios.post("http://192.168.30.73:8000/api/auth/token/", {
+      const response = await axios.post("http://172.20.10.175:8000/api/auth/token/", {
         username: formData.username,
         password: formData.password,
-      });
+      }); 
 
       // Assuming the response contains access and refresh tokens
       localStorage.setItem("access_token", response.data.access);
@@ -50,7 +50,7 @@ function LoginPage() {
   return (
     <section id="loginPage">
       <form onSubmit={handleSubmit}>
-        <h1>AZTURK PACKAGE Login</h1>
+        <h1>Macara Login</h1>
         {error && <p className="error">{error}</p>}
         <div className="form-group">
           <label>Username</label>

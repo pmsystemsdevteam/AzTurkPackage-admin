@@ -13,27 +13,32 @@ const PrivateRoute = () => {
   return localStorage.getItem("access_token") ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
-const PublicRoute = () => {
-  return localStorage.getItem("access_token") ? <Navigate to="/dashboard" replace /> : <Outlet />;
-};
-
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
       <NotMean />
       <Routes>
-        <Route element={<PublicRoute />}>
-          <Route path="/login" element={<LoginPage />} />
-        </Route>
+        <Route path="/login" element={<LoginPage />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<HomePage />} />
           <Route path="/erzaq" element={<FoodPage />} />
           <Route path="/erzaq/edit/:id" element={<UpdatePage />} />
           <Route path="/erzaq/add" element={<AddPage />} />
+          {/* Catch-all route for authenticated users */}
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* Catch-all route for unauthenticated users */}
+        <Route
+          path="*"
+          element={
+            localStorage.getItem("access_token") ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
       </Routes>
       <Footer />
     </BrowserRouter>

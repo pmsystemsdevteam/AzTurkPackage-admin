@@ -43,7 +43,11 @@ const [sales, setSales] = useState(false);
 
   const fetchData = async () => {
     try {
-      const res = await axios.get("http://192.168.30.73:8000/api/packages/");
+<<<<<<< HEAD
+      const res = await axios.get("http://192.168.30.166:8000/api/packages/");
+=======
+      const res = await axios.get("http://172.20.10.175:8000/api/packages/");
+>>>>>>> 7dfdb0b6127a4f65918af9d96461d9a427ecc6e6
       console.log("Products fetched:", res.data);
       // Extract unique types from the fetched data
       const uniqueTypes = res.data.map(item => item.Type).filter((value, index, self) => 
@@ -172,7 +176,7 @@ const [sales, setSales] = useState(false);
     try {
       setLoading(true);
       const res = await axios.post(
-        "http://192.168.30.73:8000/api/packages/",
+        "http://192.168.30.166:8000/api/packages/",
         formData,
         {
           headers: {

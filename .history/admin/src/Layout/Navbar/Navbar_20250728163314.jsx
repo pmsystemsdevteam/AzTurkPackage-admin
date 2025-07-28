@@ -11,9 +11,12 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
+    // Clear tokens from localStorage
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
+    // Close the mobile menu if open
     setIsOpen(false);
+    // Redirect to login page
     navigate("/login");
   };
 
@@ -25,7 +28,7 @@ const Navbar = () => {
       <div className={`nav-links ${isOpen ? "open" : ""}`}>
         <Link to="/" onClick={toggleMenu}>Ana Səhifə</Link>
         <Link to="/erzaq" onClick={toggleMenu}>Məhsullar</Link>
-        <button className="logout-button" onClick={handleLogout}>Çıxış</button>
+        <button onClick={handleLogout}>Çıxış</button>
       </div>
       <div className="hamburger" onClick={toggleMenu}>
         {isOpen ? "✕" : "☰"}

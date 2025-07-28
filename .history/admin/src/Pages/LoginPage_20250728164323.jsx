@@ -50,7 +50,7 @@ function LoginPage() {
   return (
     <section id="loginPage">
       <form onSubmit={handleSubmit}>
-        <h1>AZTURK PACKAGE Login</h1>
+        <h1>Macara Login</h1>
         {error && <p className="error">{error}</p>}
         <div className="form-group">
           <label>Username</label>
