@@ -123,7 +123,7 @@ function FoodPage() {
 
   const downloadExcel = () => {
     const data = filteredFoods.map((item, index) => ({
-      "#": item.Sales ? "Kompanya" : startIndex + index + 1,
+      "#": startIndex + index + 1,
       Kateqoriya: item.MainCategory === "cleaning" ? "Təmizlik" : "Paketləmə",
       "Adı (AZ)": item.Name?.Az || "",
       "Adı (TR)": item.Name?.Tr || "",
@@ -144,6 +144,8 @@ function FoodPage() {
       "Xüsusiyyət 3 (TR)": item.Spec3?.Tr || "",
       "Xüsusiyyət 3 (EN)": item.Spec3?.En || "",
       Qiymət: `${item.Price} ₼` || "",
+      "Qiymət Görünməsi": item.Look ? "Görünən" : "Görünməyən",
+      "Məhsul Görünməsi": item.Visible ? "Görünən" : "Görünməyən",
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(data);
@@ -412,6 +414,8 @@ function FoodPage() {
             </th>
             <th>Şəkil</th>
             <th>Qiymət</th>
+            <th>Qiymət Görünməsi</th>
+            <th>Məhsul Görünməsi</th>
             <th>Yenilə</th>
             <th>Sil</th>
           </tr>
@@ -451,6 +455,8 @@ function FoodPage() {
                 <img src={item.image_url} alt={item.Type?.Az} />
               </td>
               <td>{item.Price} ₼</td>
+              <td>{item.Look ? "Görünən" : "Görünməyən"}</td>
+              <td>{item.Visible ? "Görünən" : "Görünməyən"}</td>
               <td>
                 <button className="edit" onClick={() => handleEdit(item.id)}>
                   Yenilə

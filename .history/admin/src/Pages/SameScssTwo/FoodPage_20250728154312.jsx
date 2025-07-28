@@ -497,7 +497,7 @@ function FoodPage() {
               <IoIosCloseCircleOutline />
             </span>
             <img src={modalImage} alt="Info" />
-          </div>
+          </div>c
         </div>
       )}
     </div>
