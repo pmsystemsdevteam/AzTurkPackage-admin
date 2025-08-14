@@ -20,17 +20,17 @@ function FoodPage() {
   const [sortOrder, setSortOrder] = useState("none");
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState("");
-
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; 
   const navigate = useNavigate();
   const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://192.168.30.73:8000/api/packages/");
+        const res = await axios.get(`${API_BASE_URL}/api/packages/`);
         setProduct(res.data);
       } catch (error) {
-        console.error("Error fetching products:", error);
+      
       }
     };
     fetchData();
@@ -38,11 +38,11 @@ function FoodPage() {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://192.168.30.73:8000/api/packages/${deleteId}/`);
+      await axios.delete(`${API_BASE_URL}/api/packages/${deleteId}/`);
       setProduct((prev) => prev.filter((food) => food.id !== deleteId));
       setDeleteId(null);
     } catch (error) {
-      console.error("Error deleting product:", error);
+ 
     }
   };
 

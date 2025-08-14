@@ -17,6 +17,7 @@ function UpdatePage() {
   const [types, setTypes] = useState([]);
   const [filteredTypes, setFilteredTypes] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; 
 
   const [formData, setFormData] = useState({
     MainCategory: "",
@@ -38,7 +39,7 @@ function UpdatePage() {
 
   const fetchDetail = async () => {
     try {
-      const res = await axios.get(`http://192.168.30.73:8000/api/packages/${id}`);
+      const res = await axios.get(`${API_BASE_URL}/api/packages/${id}`);
       const data = res.data;
 
       setFormData({
@@ -57,7 +58,7 @@ function UpdatePage() {
 
       setImagePreview(data.image);
     } catch (err) {
-      console.error("Məlumat gətirilərkən xəta:", err);
+
       toast.error("Məlumat gətirilərkən xəta baş verdi!", {
         position: "top-right",
         autoClose: 3000,
@@ -69,14 +70,14 @@ function UpdatePage() {
 
   const fetchTypes = async () => {
     try {
-      const res = await axios.get("http://192.168.30.73:8000/api/packages/");
+      const res = await axios.get(`${API_BASE_URL}/api/packages/`);
       const uniqueTypes = res.data.map(item => item.Type).filter((value, index, self) => 
         index === self.findIndex((t) => t.Az === value.Az)
       );
       setTypes(uniqueTypes);
       setFilteredTypes(uniqueTypes);
     } catch (error) {
-      console.error("Error fetching types:", error);
+     
       toast.error("Növləri əldə etmək alınmadı!", {
         position: "top-right",
         autoClose: 3000,
@@ -164,7 +165,7 @@ function UpdatePage() {
         payload.append("Image", imageFile);
       }
 
-      await axios.put(`http://192.168.30.73:8000/api/packages/${id}/`, payload);
+      await axios.put(`${API_BASE_URL}/api/packages/${id}/`, payload);
 
       setLoad(false);
       toast.success("Məhsul uğurla yeniləndi!", {
@@ -173,7 +174,7 @@ function UpdatePage() {
       });
       setTimeout(() => navigate("/erzaq"), 300);
     } catch (err) {
-      console.error("Yeniləmə zamanı xəta:", err);
+
       setLoad(false);
       toast.error("Yeniləmə zamanı xəta baş verdi!", {
         position: "top-right",

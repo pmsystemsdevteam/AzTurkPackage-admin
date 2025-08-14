@@ -13,6 +13,7 @@ function LoginPage() {
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; 
 
   const handleEye = () => setEye(!eye);
 
@@ -27,10 +28,13 @@ function LoginPage() {
     setError("");
 
     try {
-      const response = await axios.post("http://192.168.30.73:8000/api/auth/token/", {
-        username: formData.username,
-        password: formData.password,
-      });
+      const response = await axios.post(
+        `${API_BASE_URL}/api/auth/token/`,
+        {
+          username: formData.username,
+          password: formData.password,
+        }
+      );
 
       // Assuming the response contains access and refresh tokens
       localStorage.setItem("access_token", response.data.access);
@@ -39,9 +43,7 @@ function LoginPage() {
       // Redirect to a protected route (e.g., dashboard)
       navigate("/dashboard");
     } catch (err) {
-      setError(
-        err.response?.data?.detail || "Login failed. Please try again."
-      );
+      setError(err.response?.data?.detail || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }

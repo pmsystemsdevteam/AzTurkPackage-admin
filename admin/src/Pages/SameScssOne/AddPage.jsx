@@ -40,11 +40,11 @@ function AddPage() {
   const [filteredTypes, setFilteredTypes] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
 const [sales, setSales] = useState(false); 
-
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; 
   const fetchData = async () => {
     try {
-      const res = await axios.get("http://192.168.30.73:8000/api/packages/");
-      console.log("Products fetched:", res.data);
+      const res = await axios.get(`${API_BASE_URL}/api/packages/`);
+  
       // Extract unique types from the fetched data
       const uniqueTypes = res.data.map(item => item.Type).filter((value, index, self) => 
         index === self.findIndex((t) => t.Az === value.Az)
@@ -52,7 +52,7 @@ const [sales, setSales] = useState(false);
       setTypes(uniqueTypes);
       setFilteredTypes(uniqueTypes);
     } catch (error) {
-      console.error("Error fetching products:", error);
+  
       toast.error("Məhsulları əldə etmək alınmadı!", {
         position: "top-right",
         autoClose: 300,
@@ -172,7 +172,7 @@ const [sales, setSales] = useState(false);
     try {
       setLoading(true);
       const res = await axios.post(
-        "http://192.168.30.73:8000/api/packages/",
+        `${API_BASE_URL}/api/packages/`,
         formData,
         {
           headers: {
@@ -188,7 +188,7 @@ const [sales, setSales] = useState(false);
       });
       fetchData(); // Refresh types after successful submission
     } catch (error) {
-      console.error("Error adding product:", error);
+    
       setLoading(false);
       setErrorMessage("Məhsul əlavə edilərkən xəta baş verdi");
       toast.error("Məhsul əlavə edilərkən xəta baş verdi!", {
